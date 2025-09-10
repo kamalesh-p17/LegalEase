@@ -6,17 +6,20 @@ import PyPDF2
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import ikapi
+from google import genai
+from google.genai import types
 
 # -------------------------------
-# Load environment variables
+# Step 0: Load environment variables
 # -------------------------------
 load_dotenv()
 KANON_API_KEY = os.getenv("KANOON_API_KEY")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")  # Your Gemini API key
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # -------------------------------
-# Kanoon API setup
+# Step 1: Setup clients
 # -------------------------------
+# India Kanoon client
 class Args:
     token = KANON_API_KEY
     maxcites = 0
@@ -31,24 +34,25 @@ class Args:
     sortby = None
 
 storage = ikapi.FileStorage("data")
-client = ikapi.IKApi(Args, storage)
+ik_client = ikapi.IKApi(Args, storage)
+
+# Gemini client
+gemini_client = genai.Client(api_key=GOOGLE_API_KEY)
 
 # -------------------------------
-# Step 1: Search for a case
+# Step 2: Search for a case
 # -------------------------------
 query = "Article 21 right to life"
-results = client.search(query, pagenum=0, maxpages=1)
+results = ik_client.search(query, pagenum=0, maxpages=1)
 results_json = json.loads(results)
 case_id = results_json['docs'][0]['tid']
+print(f"Found Case ID: {case_id}")
 
 # -------------------------------
-# Step 2: Fetch full case document
+# Step 3: Fetch full case document
 # -------------------------------
-full_doc_json = json.loads(client.fetch_doc(case_id))
+full_doc_json = json.loads(ik_client.fetch_doc(case_id))
 
-# -------------------------------
-# Step 3: Extract text from PDF or HTML
-# -------------------------------
 case_text = ""
 
 if "pdf_url" in full_doc_json:
@@ -66,10 +70,12 @@ else:
     soup = BeautifulSoup(html_content, "html.parser")
     case_text = soup.get_text(separator="\n", strip=True)
 
+print(f"Extracted {len(case_text)} characters from case.")
+
 # -------------------------------
 # Step 4: Chunk the text
 # -------------------------------
-def chunk_text(text, max_chars=2000):
+def chunk_text(text, max_chars=8000):
     chunks = []
     start = 0
     while start < len(text):
@@ -82,48 +88,43 @@ chunks = chunk_text(case_text)
 summaries = []
 
 # -------------------------------
-# Step 5: Gemini API endpoint
+# Step 5: Role-based Summarization
 # -------------------------------
-url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GOOGLE_API_KEY}"
-headers = {"Content-Type": "application/json"}
+def get_prompt(role: str, chunk: str) -> str:
+    if role == "public":
+        return f"Explain the following legal text in **simple terms** so a general person can understand:\n\n{chunk}"
+    elif role == "student":
+        return f"Summarize the following legal text like a **law student’s notes**. Include constitutional provisions, case laws (if any), and legal doctrines:\n\n{chunk}"
+    elif role == "lawyer":
+        return f"Summarize the following legal text as a **professional case brief for a lawyer**. Use structured sections: Facts, Issues, Arguments, Court Reasoning, Judgment, and Key Takeaways:\n\n{chunk}"
+    else:
+        # fallback: general summary
+        return f"Summarize this legal text concisely:\n\n{chunk}"
 
-# -------------------------------
-# Step 6: Send each chunk to Gemini
-# -------------------------------
+
+role = input("Enter role (public / student / lawyer): ").strip().lower()
+
+summaries = []
+
 for i, chunk in enumerate(chunks):
-    print(f"Summarizing chunk {i+1}/{len(chunks)}...")
-    
-    data = {
-        "contents": [
-            {"parts": [{"text": f"Summarize the following legal text concisely:\n\n{chunk}"}]}
+    print(f"\n🔹 Summarizing chunk {i+1}/{len(chunks)} as {role}...")
+
+    response = gemini_client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=[
+            types.Part.from_text(
+                text=get_prompt(role, chunk)
+            )
         ]
-    }
-    
-    response = requests.post(url, headers=headers, data=json.dumps(data))
-    result = response.json()
-    
-    # Debug: Uncomment to see full API response
-    # print(json.dumps(result, indent=2))
-    
-    # -------------------------------
-    # Safely extract summary
-    # -------------------------------
-    chunk_summary = "No summary returned"
-    try:
-        # New Gemini response format
-        if "predictions" in result:
-            chunk_summary = result["predictions"][0]["content"][0]["text"]
-        # Older format fallback
-        elif "candidates" in result:
-            chunk_summary = result["candidates"][0]["content"]
-    except (KeyError, IndexError):
-        chunk_summary = "No summary returned"
-    
-    summaries.append(chunk_summary.strip())
+    )
+
+    chunk_summary = response.text.strip() if response.text else "No summary returned"
+    summaries.append(chunk_summary)
+
 
 # -------------------------------
-# Step 7: Combine and print final summary
+# Step 6: Combine and print final summary
 # -------------------------------
 final_summary = "\n\n".join(summaries)
-print("=== Final Case Summary ===")
+print("\n=== Final Case Summary ===")
 print(final_summary)
