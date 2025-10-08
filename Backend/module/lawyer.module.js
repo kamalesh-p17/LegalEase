@@ -1,4 +1,4 @@
-import mongoose , {Schema} from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const lawyerSchema = new Schema({
     user_id: {
@@ -12,12 +12,12 @@ const lawyerSchema = new Schema({
     },
     experience_years: {
         type: Number,
-        required : true,
-        min : 0,
+        required: true,
+        min: 0,
     },
     location: {
         type: String,
-        required : true,
+        required: true,
     },
     availability: {
         type: Boolean,
@@ -26,8 +26,8 @@ const lawyerSchema = new Schema({
     ratings: {
         type: Number,
         default: 0,
-        min : 0,
-        max : 5
+        min: 0,
+        max: 5,
     },
 
     // cases
@@ -35,34 +35,52 @@ const lawyerSchema = new Schema({
         {
             case_id: {
                 type: Schema.Types.ObjectId,
-                ref : 'Case',
+                ref: 'Case',
                 required: true,
             },
             client_id: {
-                type : Schema.Types.ObjectId,
+                type: Schema.Types.ObjectId,
                 ref: 'CommonUser',
                 required: true,
             },
             status: {
                 type: String,
-                enum: ['ongoing','completed','closed'],
-                default : 'ongoing'
+                enum: ['ongoing', 'completed', 'closed'],
+                default: 'ongoing',
             },
             last_update: {
                 type: Date,
                 default: Date.now,
-            }
-        }
+            },
+        },
+    ],
+
+    // ✅ NEW FIELD: client requests
+    requests: [
+        {
+            client_id: {
+                type: Schema.Types.ObjectId,
+                ref: 'CommonUser',
+                required: true,
+            },
+            client_name: {
+                type: String,
+                required: true,
+            },
+            requested_at: {
+                type: Date,
+                default: Date.now,
+            },
+        },
     ],
 
     // verification
-
-    bar_council_id:{
+    bar_council_id: {
         type: String,
         required: true,
-        trim : true,
+        trim: true,
     },
-    bar_council_state:{
+    bar_council_state: {
         type: String,
         required: true,
     },
@@ -76,7 +94,7 @@ const lawyerSchema = new Schema({
         type: String,
         enum: ['pending', 'approved', 'rejected'],
         default: 'pending',
-    }
+    },
 });
 
 const LawyerProfile = mongoose.model('LawyerProfile', lawyerSchema);

@@ -9,6 +9,7 @@ import User from './module/user.module.js';
 import LawyerProfile from './module/lawyer.module.js';
 import CommonUser from './module/commonUser.module.js';
 import Case from './module/case.module.js';
+import authRouter from './router/authRouter.js';
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ connectDB()
 app.use('/lawyer', lawyerRouter);
 app.use('/people', peopleRouter);
 app.use('/case', caseRouter);
+app.use('/api/auth', authRouter);
 
 app.get('/users', async(req, res) => {
   try {
@@ -118,6 +120,9 @@ app.get('/case_details', async(req, res) => {
 });
 
 // Test route
+
+
+
 
 app.get('/', (req, res) => {
   res.send('API is running...');

@@ -1,0 +1,40 @@
+.lawyer-search-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #f9f9f9;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.lawyer-search-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.lawyer-search-input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.lawyer-search-button {
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.lawyer-search-results ul {
+  list-style: none;
+  padding: 0;
+}
+
+.lawyer-item:hover {
+  background-color: #f0f8ff;
+  transition: 0.2s;
+}

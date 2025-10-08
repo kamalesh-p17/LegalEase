@@ -1,0 +1,122 @@
+/* Global */
+body {
+  background-color: #f5f5f5;
+  color: #111;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container */
+.login-signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Form */
+.login-signup-form {
+  background-color: #111; /* dark background */
+  color: #fff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  width: 380px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+}
+
+/* Form title */
+.login-signup-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+/* Inputs and select */
+.login-signup-input, 
+.login-signup-select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Input fields white background */
+.login-signup-input {
+  background-color: #fff;
+  color: #111;
+}
+
+/* Select fields white background */
+.login-signup-select {
+  background-color: #fff;
+  color: #111;
+}
+
+/* Submit button */
+.login-signup-button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  background-color: #fff;
+  color: #111;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.login-signup-button:hover {
+  background-color: #111;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+/* Paragraph and links */
+.login-signup-text {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.login-signup-text a {
+  color: #fff;
+  text-decoration: underline;
+  transition: all 0.3s ease;
+}
+
+.login-signup-text a:hover {
+  color: #ccc;
+}
+
+/* Optional: inline span link toggle */
+.login-signup-text span {
+  color: #fff;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all 0.3s ease;
+}
+
+.login-signup-text span:hover {
+  color: #ccc;
+}
+
+/* Smooth fade-in for dynamic fields */
+.login-signup-form .dynamic-field {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 420px) {
+  .login-signup-form {
+    width: 90%;
+    padding: 30px 20px;
+  }
+}
