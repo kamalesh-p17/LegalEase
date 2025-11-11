@@ -18,14 +18,14 @@ router.post('/filter', async (req, res) => {
         const { specialization, location, experience_years } = req.body;
 
         const filteredLawyers = await LawyerProfile.find({
-            ...(specialization && { specialization }),
+            ...(specialization && { specialization: { $regex: specialization, $options: 'i' } }),
             ...(location && { location: { $regex: location, $options: 'i' } }),
             ...(experience_years && { experience_years: { $gte: experience_years } }),
             approved_status: 'approved'
         })
         .populate('user_id', 'name email phone')
         .select('specialization experience_years location availability ratings bar_council_id approved_status');
-
+        console.log(filteredLawyers);
         res.status(200).json({
             success: true,
             lawyers: filteredLawyers
@@ -91,7 +91,12 @@ router.get('/my-cases', verifyToken, async (req, res) => {
                 select: '_id user_id specialization location experience_years',
                 populate: { path: 'user_id', select: 'name' }
             })
-            .populate('cases.case_id'); // optional, populate full case info
+            .populate('cases.case_id');
+
+            if (client && client.cases?.length) {
+            // Sort cases by last_updated descending
+            client.cases.sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated));
+            }
 
         if (!client) 
             return res.status(404).json({ success: false, message: "Client not found" });

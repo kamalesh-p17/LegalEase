@@ -1,167 +1,154 @@
-/* Container */
 .notifications-container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  position: relative;
+  padding: 40px 20px;
+  font-family: "Poppins", sans-serif;
+  background-color: #f8fafc;
+  min-height: 100vh;
 }
 
-/* Back button */
 .back-button {
-  background-color: #eee;
+  background: none;
   border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
+  color: #1e3a8a;
+  font-size: 1rem;
   cursor: pointer;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
-.back-button:hover {
-  background-color: #ddd;
+.notifications-title {
+  text-align: center;
+  color: #1e40af;
+  margin-bottom: 25px;
 }
 
-/* Requests List */
+.no-requests {
+  text-align: center;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
 .requests-list {
+  max-width: 800px;
+  margin: 0 auto;
   list-style: none;
   padding: 0;
 }
 
 .request-item {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 15px;
-  margin-bottom: 10px;
-  background-color: #fff;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.request-item div {
-  display: flex;
-  flex-direction: column;
+.request-info strong {
+  font-size: 1.1rem;
+  color: #1e3a8a;
 }
 
 .request-time {
+  display: block;
+  color: #6b7280;
   font-size: 0.85rem;
-  color: #777;
-  margin-top: 3px;
+  margin-top: 4px;
 }
 
-/* Buttons */
 .request-actions button {
-  margin-left: 8px;
+  margin-left: 10px;
   padding: 6px 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 
 .accept-button {
-  background-color: #4CAF50;
+  background-color: #1e40af;
   color: white;
 }
 
 .accept-button:hover {
-  background-color: #45a049;
+  background-color: #2563eb;
 }
 
 .reject-button {
-  background-color: #f44336;
+  background-color: #dc2626;
   color: white;
 }
 
 .reject-button:hover {
-  background-color: #da190b;
+  background-color: #ef4444;
 }
 
-.no-requests {
-  text-align: center;
-  color: #555;
-  margin-top: 20px;
-}
-
-/* Case Form Modal */
+/* Modal Form */
 .case-form-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
+  max-width: 600px;
+  margin: 0 auto;
+  background: white;
   padding: 25px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-  z-index: 1000;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.case-form-modal h3 {
+.modal-title {
+  color: #1e3a8a;
+  font-size: 1.2rem;
   margin-bottom: 15px;
-  color: #333;
-  text-align: center;
 }
 
-.case-form-modal input,
-.case-form-modal textarea {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.case-input,
+.case-textarea,
+.case-select {
+  width: 90%;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
   font-size: 0.95rem;
-  box-sizing: border-box;
 }
 
-.case-form-modal textarea {
+.case-textarea {
+  min-height: 100px;
   resize: vertical;
-  min-height: 80px;
+}
+
+.case-select {
+  background-color: #fff;
+  cursor: pointer;
 }
 
 .case-buttons {
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
 }
 
 .accept-btn {
-  background-color: #4CAF50;
+  background-color: #1e40af;
   color: white;
   border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background-color: #9ca3af;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
   cursor: pointer;
 }
 
 .accept-btn:hover {
-  background-color: #45a049;
-}
-
-.cancel-btn {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-left: 10px;
+  background-color: #2563eb;
 }
 
 .cancel-btn:hover {
-  background-color: #da190b;
-}
-
-.case-form-modal::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.3);
-  z-index: -1;
+  background-color: #6b7280;
 }

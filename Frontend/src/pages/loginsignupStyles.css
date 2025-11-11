@@ -1,122 +1,130 @@
-/* Global */
-body {
-  background-color: #f5f5f5;
-  color: #111;
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
+/* Background */
+.login-container {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+  padding: 20px;
 }
 
-/* Container */
-.login-signup-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+/* Card */
+.login-card {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  color: #111827;
+}
+
+/* Title */
+.login-title {
+  color: #1e40af;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.login-subtext {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin-bottom: 25px;
 }
 
 /* Form */
-.login-signup-form {
-  background-color: #111; /* dark background */
-  color: #fff;
-  padding: 40px 30px;
-  border-radius: 12px;
-  width: 380px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-  transition: all 0.3s ease;
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-/* Form title */
-.login-signup-form h2 {
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 24px;
+.form-input,
+.form-select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.3s;
 }
 
-/* Inputs and select */
-.login-signup-input, 
-.login-signup-select {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
+.form-input:focus,
+.form-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.3);
+}
+
+.form-label {
+  font-weight: 500;
+  color: #1f2937;
+  text-align: left;
+}
+
+/* Button */
+.login-btn {
+  background-color: #1e40af;
+  color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  box-sizing: border-box;
-}
-
-/* Input fields white background */
-.login-signup-input {
-  background-color: #fff;
-  color: #111;
-}
-
-/* Select fields white background */
-.login-signup-select {
-  background-color: #fff;
-  color: #111;
-}
-
-/* Submit button */
-.login-signup-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  background-color: #fff;
-  color: #111;
-  font-weight: bold;
-  border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  padding: 10px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
+  transition: 0.3s ease;
+  margin-top: 10px;
 }
 
-.login-signup-button:hover {
-  background-color: #111;
-  color: #fff;
-  border: 1px solid #fff;
+.login-btn:hover {
+  background-color: #2563eb;
 }
 
-/* Paragraph and links */
-.login-signup-text {
-  text-align: center;
-  margin-top: 12px;
-  font-size: 14px;
+/* Toggle Text */
+.toggle-text {
+  margin-top: 20px;
+  color: #374151;
+  font-size: 0.9rem;
 }
 
-.login-signup-text a {
-  color: #fff;
-  text-decoration: underline;
-  transition: all 0.3s ease;
-}
-
-.login-signup-text a:hover {
-  color: #ccc;
-}
-
-/* Optional: inline span link toggle */
-.login-signup-text span {
-  color: #fff;
+.toggle-text span {
+  color: #1e40af;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
-  transition: all 0.3s ease;
 }
 
-.login-signup-text span:hover {
-  color: #ccc;
-}
-
-/* Smooth fade-in for dynamic fields */
-.login-signup-form .dynamic-field {
-  opacity: 1;
-  transition: opacity 0.3s ease;
+.toggle-text span:hover {
+  color: #2563eb;
 }
 
 /* Responsive */
-@media (max-width: 420px) {
-  .login-signup-form {
-    width: 90%;
+@media (max-width: 480px) {
+  .login-card {
     padding: 30px 20px;
   }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+}
+.form-input.error {
+  border-color: #dc2626;
+  background-color: #fee2e2;
+}
+.form-select {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  outline: none;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+.form-select:focus {
+  border-color: #1e40af;
+  box-shadow: 0 0 4px rgba(37, 99, 235, 0.4);
 }

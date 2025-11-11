@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./LawyerSearchStyles.css";
+import './LawyerSearchStyles.css';
 
-function LawyerSearch({goBack}) {
+function LawyerSearch({ goBack }) {
   const [formData, setFormData] = useState({
     specialization: "",
     location: "",
@@ -12,12 +12,10 @@ function LawyerSearch({goBack}) {
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
-  // Handle input changes for search form
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle lawyer search
   const handleSearch = async (e) => {
     e.preventDefault();
 
@@ -52,7 +50,6 @@ function LawyerSearch({goBack}) {
     }
   };
 
-  // Send a request to the selected lawyer
   const handleSendRequest = async (lawyer) => {
     if (!token) {
       alert("Please login to send a request.");
@@ -88,17 +85,36 @@ function LawyerSearch({goBack}) {
       <button className="back-button" onClick={goBack}>
         ← Back
       </button>
-      <h2>Search Lawyers</h2>
+
+      <h2 className="search-heading">Find the Lawyer</h2>
+      <p className="search-subtext">
+        Filter lawyers based on specialization, location, or years of experience.
+      </p>
 
       {/* Search Form */}
       <form onSubmit={handleSearch} className="lawyer-search-form">
-        <input
-          className="lawyer-search-input"
+
+        {/* Specialization Dropdown */}
+        <select
           name="specialization"
-          placeholder="Specialization (e.g., Criminal, Civil)"
           value={formData.specialization}
           onChange={handleChange}
-        />
+          className="lawyer-search-input"
+        >
+          <option value="">Select Specialization</option>
+          <option value="criminal">Criminal</option>
+          <option value="civil">Civil</option>
+          <option value="family">Family</option>
+          <option value="corporate">Corporate</option>
+          <option value="property">Property</option>
+          <option value="labor">Labor</option>
+          <option value="tax">Tax</option>
+          <option value="intellectual_property">Intellectual Property</option>
+          <option value="environmental">Environmental</option>
+          <option value="human_rights">Human Rights</option>
+          <option value="others">Others</option>
+        </select>
+
         <input
           className="lawyer-search-input"
           name="location"
@@ -106,6 +122,7 @@ function LawyerSearch({goBack}) {
           value={formData.location}
           onChange={handleChange}
         />
+
         <input
           className="lawyer-search-input"
           name="experience_years"
@@ -114,53 +131,35 @@ function LawyerSearch({goBack}) {
           value={formData.experience_years}
           onChange={handleChange}
         />
+
         <button className="lawyer-search-button" type="submit" disabled={loading}>
           {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
-      {/* Search Results */}
-      <div className="lawyer-search-results">
+      {/* Results */}
+      <div className="lawyer-results">
         {results.length === 0 && !loading ? (
-          <p>No lawyers found. Try adjusting filters.</p>
+          <p className="no-results">No lawyers found. Try adjusting filters.</p>
         ) : (
-          <ul>
+          <div className="lawyer-grid">
             {results.map((lawyer) => (
-              <li
-                key={lawyer._id}
-                className="lawyer-item"
-                style={{
-                  padding: "15px",
-                  borderBottom: "1px solid #ccc",
-                  marginBottom: "10px",
-                }}
-              >
-                <strong style={{ fontSize: "1.1rem" }}>
-                  {lawyer.user_id?.name || "Unnamed Lawyer"}
-                </strong>{" "}
-                <br />
-                <b>Specialization:</b> {lawyer.specialization} <br />
-                <b>Location:</b> {lawyer.location} <br />
-                <b>Experience:</b> {lawyer.experience_years} years <br />
-                <b>Status:</b> {lawyer.approved_status} <br />
+              <div className="lawyer-card" key={lawyer._id}>
+                <h3 className="lawyer-name">{lawyer.user_id?.name || "Unnamed Lawyer"}</h3>
+                <p><b>Specialization:</b> {lawyer.specialization}</p>
+                <p><b>Location:</b> {lawyer.location}</p>
+                <p><b>Experience:</b> {lawyer.experience_years} years</p>
+                <p><b>Status:</b> {lawyer.approved_status}</p>
+
                 <button
                   className="request-button"
                   onClick={() => handleSendRequest(lawyer)}
-                  style={{
-                    marginTop: "10px",
-                    padding: "6px 12px",
-                    backgroundColor: "#007bff",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
                 >
                   Send Request
                 </button>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

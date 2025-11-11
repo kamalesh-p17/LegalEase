@@ -1,0 +1,103 @@
+.my-cases-container {
+  background-color: #f8fafc;
+  padding: 40px 20px;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  width: 100%;  
+}
+
+p{
+  margin: 0;
+}
+.my-cases-title {
+  color: #1e40af;
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.no-cases {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+/* Grid Layout */
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Case Card */
+.case-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.case-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.case-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e3a8a;
+  margin-bottom: 10px;
+}
+
+.case-status {
+  margin-bottom: 10px;
+}
+
+.status-open {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.status-closed {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #ca8a04;
+  font-weight: 600;
+}
+
+.case-card p {
+  color: #374151;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 5px;
+}
+
+/* View Details Button */
+.view-details-btn {
+  background-color: #1e40af;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 10px;
+  transition: background 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .my-cases-title {
+    font-size: 1.6rem;
+  }
+}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./MyCasesStyles.css";
 
 function MyCases({ setSelectedCase }) {
   const [cases, setCases] = useState([]);
@@ -33,31 +34,44 @@ function MyCases({ setSelectedCase }) {
   }, [token]);
 
   return (
-    <div>
-      <h2>My Cases</h2>
+    <div className="my-cases-container">
+      <h2 className="my-cases-title">My Cases</h2>
       {cases.length === 0 ? (
-        <p>No cases found.</p>
+        <p className="no-cases">No cases found.</p>
       ) : (
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <div className="case-grid">
           {cases.map((c) => (
-            <li
+            <div
               key={c._id}
+              className="case-card"
               onClick={() => setSelectedCase(c._id)}
-              style={{
-                cursor: "pointer",
-                padding: "10px",
-                border: "1px solid #ccc",
-                marginBottom: "10px",
-                borderRadius: "5px",
-                background: "#f9f9f9",
-              }}
             >
-              <strong>{c.title}</strong> - {c.status} <br />
-              Lawyer: {c.lawyer_name} ({c.specialization}) <br />
-              Location: {c.location} | Experience: {c.experience_years} years
-            </li>
+              <h3 className="case-title">{c.title}</h3>
+              <p className="case-status">
+                <b>Status:</b>{" "}
+                <span
+                  className={
+                    c.status === "open"
+                      ? "status-open"
+                      : c.status === "closed"
+                      ? "status-closed"
+                      : "status-pending"
+                  }
+                >
+                  {(c.status === "ongoing") ? "Pending" : c.status.charAt(0).toUpperCase() + c.status.slice(1)}
+                </span>
+              </p>
+              <p><b>Lawyer:</b> {c.lawyer_name || "Not assigned"}</p>
+              <p><b>Specialization:</b> {c.specialization}</p>
+              <p><b>Location:</b> {c.location}</p>
+              <p><b>Experience:</b> {c.experience_years} years</p>
+
+              <button className="view-details-btn">
+                View Details →
+              </button>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );

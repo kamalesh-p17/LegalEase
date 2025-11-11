@@ -1,29 +1,26 @@
-// LawyerDashboard.jsx
 import React, { useState } from "react";
-import LawyerNotifications from "../components/LawyerNotification/LawyerNotification.jsx";
+import LawyerCases from "../components/LawyerCases/LawyerCases.jsx";
+import LawerCaseDetails from "../components/LawyerCaseDetails/LawyerCaseDetails.jsx";
+import "./LawyerDashboardStyles.css";
 
 function LawyerDashboard() {
-  const [viewRequests, setViewRequests] = useState(false);
+  const [selectedCase, setSelectedCase] = useState(null);
 
   return (
-    <div style={{ padding: "20px" }}>
-      {!viewRequests ? (
-        <button
-          onClick={() => setViewRequests(true)}
-          style={{
-            padding: "10px 20px",
-            fontSize: "16px",
-            cursor: "pointer",
-            borderRadius: "5px",
-            background: "#007bff",
-            color: "#fff",
-            border: "none",
-          }}
-        >
-          View Requests
-        </button>
+    <div className="lawyer-dashboard-container">
+      <h1 className="dashboard-title">Lawyer Dashboard</h1>
+      {!selectedCase ? (
+        <>
+          <p className="dashboard-subtitle">
+            View and manage your assigned cases
+          </p>
+          <LawyerCases setSelectedCase={setSelectedCase} />
+        </>
       ) : (
-        <LawyerNotifications goBack={() => setViewRequests(false)} />
+        <LawerCaseDetails
+          caseId={selectedCase}
+          goBack={() => setSelectedCase(null)}
+        />
       )}
     </div>
   );

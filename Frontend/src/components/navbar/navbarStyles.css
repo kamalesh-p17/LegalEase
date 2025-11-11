@@ -1,50 +1,119 @@
-/* Navbar container */
 .navbar {
-  background-color: #111;
-  color: #fff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 24px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  background-color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
 }
 
-/* Logo */
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 12px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .navbar-logo a {
-  color: #fff;
   text-decoration: none;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e40af;
+  transition: color 0.3s ease;
 }
 
 .navbar-logo a:hover {
-  color: #ccc;
+  color: #2563eb;
 }
 
-/* Links */
+/* Navigation links */
 .navbar-links {
   list-style: none;
   display: flex;
-  gap: 20px;
+  gap: 25px;
   margin: 0;
   padding: 0;
 }
 
-.navbar-links li a {
-  color: #fff;
+.nav-link {
   text-decoration: none;
-  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+  transition: color 0.3s ease, transform 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
+}
+
+.nav-link:hover {
+  color: #1e40af;
+  transform: translateY(-1px);
+}
+
+/* Logout button */
+.logout-btn {
+  border: none;
+  background: none;
+  color: #b91c1c;
+  cursor: pointer;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.logout-btn:hover {
+  color: #ef4444;
+}
+
+/* Responsive navbar */
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-links {
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+  }
+}
+/* SEARCH TOGGLE BUTTON */
+.search-toggle-btn {
+  background: none;
+  border: 2px solid #1e40af;
+  color: #1e40af;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 500;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.navbar-links li a:hover {
-  color: #ccc;
+.search-toggle-btn:hover {
+  background: #1e40af;
+  color: white;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .navbar-links {
-    flex-direction: column;
-    gap: 10px;
+/* SEARCH PANEL BELOW NAVBAR */
+.search-panel {
+  background: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  padding: 20px;
+  animation: fadeSlide 0.3s ease forwards;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

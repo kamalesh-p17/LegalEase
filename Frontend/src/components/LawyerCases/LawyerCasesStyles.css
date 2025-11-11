@@ -1,0 +1,69 @@
+.lawyer-my-cases-container {
+  max-width: 850px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: "Poppins", sans-serif;
+  color: #1e293b; /* Default text color: dark slate */
+}
+
+.cases-list {
+  padding: 0;
+  margin: 0;
+}
+
+.case-card {
+  list-style: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.case-card:hover {
+  background: #e8eefc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.15);
+}
+
+/* Case title styling */
+.case-card strong {
+  color: #1e3a8a;
+  font-size: 1.05rem;
+}
+
+/* Status tag */
+.status {
+  float: right;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* 🔵 Blue = Ongoing / Pending */
+.status.ongoing {
+  color: #2563eb;
+}
+
+/* 🟢 Green = Completed */
+.status.completed {
+  color: #16a34a;
+}
+
+/* 🔴 Red = Closed */
+.status.closed {
+  color: #dc2626;
+}
+
+/* Subtext styling (lawyer info, location, etc.) */
+.case-card p {
+  color: #475569;
+  font-size: 0.95rem;
+  margin: 4px 0;
+}

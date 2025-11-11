@@ -20,6 +20,7 @@ function LawyerNotifications({ goBack }) {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
+        console.log(data);
         if (data.success) setRequests(data.requests || []);
       } catch (err) {
         console.error(err);
@@ -53,10 +54,13 @@ function LawyerNotifications({ goBack }) {
           body: JSON.stringify(caseData),
         }
       );
+
       const data = await res.json();
       if (data.success) {
         alert("Case created successfully!");
-        setRequests(requests.filter(r => r.client_id !== selectedRequest.client_id));
+        setRequests(
+          requests.filter((r) => r.client_id !== selectedRequest.client_id)
+        );
         setSelectedRequest(null);
         setCaseData({ title: "", description: "", legal_category: "" });
       } else {
@@ -70,51 +74,94 @@ function LawyerNotifications({ goBack }) {
 
   return (
     <div className="notifications-container">
-      <button className="back-button" onClick={goBack}>← Back</button>
-      <h2>Client Requests</h2>
+      <button className="back-button" onClick={goBack}>
+        ← Back
+      </button>
 
+      <h2 className="notifications-title">Client Requests</h2>
+
+      {/* CASE CREATION FORM */}
       {selectedRequest ? (
         <div className="case-form-modal">
-          <h3>Create Case for {selectedRequest.client_name}</h3>
+          <h3 className="modal-title">
+            Create Case for <span>{selectedRequest.client_name}</span>
+          </h3>
+
           <input
             type="text"
             placeholder="Case Title"
             value={caseData.title}
-            onChange={(e) => setCaseData({ ...caseData, title: e.target.value })}
+            onChange={(e) =>
+              setCaseData({ ...caseData, title: e.target.value })
+            }
+            className="case-input"
           />
+
           <textarea
             placeholder="Case Description"
             value={caseData.description}
-            onChange={(e) => setCaseData({ ...caseData, description: e.target.value })}
+            onChange={(e) =>
+              setCaseData({ ...caseData, description: e.target.value })
+            }
+            className="case-textarea"
           />
-          <input
-            type="text"
-            placeholder="Legal Category"
-            value={caseData.legal_category}
-            onChange={(e) => setCaseData({ ...caseData, legal_category: e.target.value })}
-          />
+
+          {/* 🔹 Dropdown for Legal Category */}
+          <label className="form-label">
+            Legal Category
+            <select
+              name="legal_category"
+              value={caseData.legal_category}
+              onChange={(e) =>
+                setCaseData({ ...caseData, legal_category: e.target.value })
+              }
+              className="case-select"
+              required
+            >
+              <option value="">Select Category</option>
+              <option value="Criminal Law">Criminal Law</option>
+              <option value="Civil Law">Civil Law</option>
+              <option value="Family Law">Family Law</option>
+              <option value="Corporate Law">Corporate Law</option>
+              <option value="Property Law">Property Law</option>
+              <option value="Labor Law">Labor Law</option>
+              <option value="Tax Law">Tax Law</option>
+              <option value="Intellectual Property Law">
+                Intellectual Property Law
+              </option>
+              <option value="Environmental Law">Environmental Law</option>
+              <option value="Human Rights Law">Human Rights Law</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
           <div className="case-buttons">
             <button className="accept-btn" onClick={handleSubmitCase}>
               Accept & Create Case
             </button>
-            <button className="cancel-btn" onClick={() => setSelectedRequest(null)}>
+            <button
+              className="cancel-btn"
+              onClick={() => setSelectedRequest(null)}
+            >
               Cancel
             </button>
           </div>
         </div>
       ) : (
+        // 🔹 REQUESTS LIST
         <ul className="requests-list">
           {requests.length === 0 ? (
-            <p className="no-requests">No pending requests.</p>
+            <p className="no-requests">No pending client requests.</p>
           ) : (
             requests.map((req) => (
               <li key={req.client_id} className="request-item">
-                <div>
+                <div className="request-info">
                   <strong>{req.client_name}</strong> sent a request.
                   <span className="request-time">
                     {new Date(req.requested_at).toLocaleString()}
                   </span>
                 </div>
+
                 <div className="request-actions">
                   <button
                     className="accept-button"
@@ -124,10 +171,11 @@ function LawyerNotifications({ goBack }) {
                   </button>
                   <button
                     className="reject-button"
-                    onClick={() => {
-                      // Optional: implement reject functionality
-                      setRequests(requests.filter(r => r.client_id !== req.client_id));
-                    }}
+                    onClick={() =>
+                      setRequests(
+                        requests.filter((r) => r.client_id !== req.client_id)
+                      )
+                    }
                   >
                     Reject
                   </button>
