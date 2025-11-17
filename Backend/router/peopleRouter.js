@@ -25,11 +25,45 @@ router.post('/filter', async (req, res) => {
         })
         .populate('user_id', 'name email phone')
         .select('specialization experience_years location availability ratings bar_council_id approved_status');
-        console.log(filteredLawyers);
+
+        // ==========================================
+        // Add case counts for each lawyer
+        // ==========================================
+        const result = await Promise.all(
+            filteredLawyers.map(async (lawyer) => {
+                const lawyerId = lawyer._id;
+
+                // Count each type of case
+                const ongoingCount = await Case.countDocuments({
+                    lawyer_id: lawyerId,
+                    status: 'ongoing'
+                });
+
+                const completedCount = await Case.countDocuments({
+                    lawyer_id: lawyerId,
+                    status: 'completed'
+                });
+
+                const closedCount = await Case.countDocuments({
+                    lawyer_id: lawyerId,
+                    status: 'closed'
+                });
+
+                return {
+                    ...lawyer.toObject(),
+                    ongoingCount,
+                    completedCount,
+                    closedCount
+                };
+            })
+        );
+
+        // ==========================================
         res.status(200).json({
             success: true,
-            lawyers: filteredLawyers
+            lawyers: result
         });
+
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -38,6 +72,7 @@ router.post('/filter', async (req, res) => {
         });
     }
 });
+
 
 // 2️⃣ Client sends request to lawyer
 router.post("/request", verifyToken, async (req, res) => {

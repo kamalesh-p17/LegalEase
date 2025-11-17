@@ -31,7 +31,6 @@ const commonUserSchema = new Schema({
                 type: Date,
                 default: Date.now, 
             },  
-
         }
     ],
     last_login: {

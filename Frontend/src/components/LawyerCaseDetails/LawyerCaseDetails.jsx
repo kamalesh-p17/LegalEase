@@ -5,15 +5,22 @@ function LawyerCaseDetails({ caseId, goBack }) {
   const [caseData, setCaseData] = useState(null);
   const [updateText, setUpdateText] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [newStatus, setNewStatus] = useState(""); // ⭐ NEW
+  const [statusLoading, setStatusLoading] = useState(false); // ⭐ NEW
+
   const token = localStorage.getItem("token");
 
-  // ✅ Fetch case details
   useEffect(() => {
     const fetchCase = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/lawyer/${caseId}/clients`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await fetch(
+          `http://localhost:5000/lawyer/${caseId}/clients`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
         const data = await res.json();
         if (data.success) setCaseData(data.caseData);
       } catch (err) {
@@ -24,7 +31,9 @@ function LawyerCaseDetails({ caseId, goBack }) {
     fetchCase();
   }, [caseId, token]);
 
-  // ✅ Handle adding new process update
+  // ======================================================
+  // ⭐ UPDATE PROCESS NOTES
+  // ======================================================
   const handleProcessUpdate = async () => {
     if (!updateText.trim()) {
       alert("Please enter update details.");
@@ -50,14 +59,12 @@ function LawyerCaseDetails({ caseId, goBack }) {
       if (data.success) {
         alert("Process update added successfully!");
         setUpdateText("");
+
         setCaseData((prev) => ({
           ...prev,
           process_updates: [
             ...(prev.process_updates || []),
-            {
-              update_text: updateText,
-              timestamp: new Date().toISOString(),
-            },
+            { update_text: updateText, timestamp: new Date().toISOString() },
           ],
         }));
       } else {
@@ -71,13 +78,52 @@ function LawyerCaseDetails({ caseId, goBack }) {
     }
   };
 
+  // ======================================================
+  // ⭐ UPDATE CASE STATUS
+  // ======================================================
+  const handleStatusUpdate = async () => {
+    if (!newStatus) {
+      alert("Please select a status.");
+      return;
+    }
+
+    setStatusLoading(true);
+
+    try {
+      const res = await fetch(
+        `http://localhost:5000/case/${caseId}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ new_status: newStatus }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        alert("Case status updated!");
+        setCaseData((prev) => ({ ...prev, status: newStatus }));
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error("Error updating status:", err);
+      alert("Server error");
+    } finally {
+      setStatusLoading(false);
+    }
+  };
+
   if (!caseData) return <p className="loading-text">Loading case details...</p>;
 
   return (
     <div className="lawyer-case-details-container">
-      {/* 🔙 Improved Back Button */}
-      <button className="enhanced-back-button" onClick={goBack}>
-        ← Back to Cases
+      <button className="back-button" onClick={goBack}>
+        ← Back
       </button>
 
       <div className="case-header">
@@ -86,8 +132,9 @@ function LawyerCaseDetails({ caseId, goBack }) {
           <strong>Status:</strong>{" "}
           {caseData.status === "ongoing"
             ? "Pending"
-            : caseData.status.charAt(0).toUpperCase() + caseData.status.slice(1)}{" "}
-          | <strong>Category:</strong> {caseData.legal_category}
+            : caseData.status.charAt(0).toUpperCase() + caseData.status.slice(1)}
+          {" | "}
+          <strong>Category:</strong> {caseData.legal_category}
         </p>
       </div>
 
@@ -98,14 +145,15 @@ function LawyerCaseDetails({ caseId, goBack }) {
 
       <div className="case-section client-info">
         <h3>Client Information</h3>
-        <p><strong>Name:</strong> {caseData.client?.name || "Unknown"}</p>
-        <p><strong>Email:</strong> {caseData.client?.email || "N/A"}</p>
-        <p><strong>Phone:</strong> {caseData.client?.phone || "N/A"}</p>
-        <p><strong>Location:</strong> {caseData.client?.location || "N/A"}</p>
+        <p><strong>Name:</strong> {caseData.client?.name}</p>
+        <p><strong>Email:</strong> {caseData.client?.email}</p>
+        <p><strong>Phone:</strong> {caseData.client?.phone}</p>
+        <p><strong>Location:</strong> {caseData.client?.location}</p>
       </div>
 
       <div className="case-section">
         <h3>Process Updates</h3>
+
         {caseData.process_updates.length === 0 ? (
           <p className="no-updates">No updates yet.</p>
         ) : (
@@ -122,6 +170,7 @@ function LawyerCaseDetails({ caseId, goBack }) {
         )}
       </div>
 
+      {/* Add Update */}
       {caseData.status === "ongoing" && <div className="case-section process-update-section">
         <h3>Add Process Update</h3>
         <textarea
@@ -136,6 +185,29 @@ function LawyerCaseDetails({ caseId, goBack }) {
           disabled={loading}
         >
           {loading ? "Submitting..." : "Add Update"}
+        </button>
+      </div>}
+
+      {/* ⭐ NEW STATUS UPDATE SECTION */}
+      {caseData.status === "ongoing" && <div className="case-section status-update-section">
+        <h3>Update Case Status</h3>
+
+        <select
+          className="status-select"
+          value={newStatus}
+          onChange={(e) => setNewStatus(e.target.value)}
+        >
+          <option value="">Select Status</option>
+          <option value="completed">Completed</option>
+          <option value="closed">Closed</option>
+        </select>
+
+        <button
+          className="submit-status-btn"
+          onClick={handleStatusUpdate}
+          disabled={statusLoading}
+        >
+          {statusLoading ? "Updating..." : "Update Status"}
         </button>
       </div>}
     </div>

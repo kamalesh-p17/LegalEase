@@ -196,4 +196,83 @@ router.get("/:case_id/clients", verifyToken, async (req, res) => {
   }
 });
 
+router.post("/process_status_update", verifyToken, async (req, res) => {
+    try {
+        const { case_id, new_status } = req.body;
+
+        if (!case_id || !new_status) {
+            return res.status(400).json({
+                success: false,
+                message: "case_id and new_status are required",
+            });
+        }
+
+        // allowed statuses
+        const allowed = ["ongoing", "completed", "closed"];
+        if (!allowed.includes(new_status)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid status value",
+            });
+        }
+
+        // Fetch the case
+        const caseObj = await Case.findById(case_id);
+        if (!caseObj) {
+            return res.status(404).json({
+                success: false,
+                message: "Case not found",
+            });
+        }
+
+        // Only assigned lawyer can update
+        if (req.user.role !== "lawyer" || req.user.id != caseObj.lawyer_id.toString()) {
+            return res.status(403).json({
+                success: false,
+                message: "Unauthorized: Lawyer does not own this case",
+            });
+        }
+
+        const oldStatus = caseObj.status;
+
+        caseObj.status = new_status;
+        caseObj.last_updated = new Date();
+        await caseObj.save();
+
+        await CommonUser.updateOne(
+            { "cases.case_id": case_id },
+            {
+                $set: {
+                    "cases.$.status": new_status,
+                    "cases.$.last_updated": new Date(),
+                }
+            }
+        );
+
+        await LawyerProfile.updateOne(
+            { "cases.case_id": case_id },
+            {
+                $set: {
+                    "cases.$.status": new_status,
+                    "cases.$.last_update": new Date(),
+                }
+            }
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: "Case status updated successfully",
+            old_status: oldStatus,
+            updated_status: new_status,
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({
+            success: false,
+            message: "Server error",
+        });
+    }
+});
+
 export default router;

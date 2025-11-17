@@ -10,6 +10,7 @@ import LawyerProfile from './module/lawyer.module.js';
 import CommonUser from './module/commonUser.module.js';
 import Case from './module/case.module.js';
 import authRouter from './router/authRouter.js';
+import adminRouter from './router/adminRouter.js'
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use('/lawyer', lawyerRouter);
 app.use('/people', peopleRouter);
 app.use('/case', caseRouter);
 app.use('/api/auth', authRouter);
+app.use('/admin', adminRouter);
 
 app.get('/users', async(req, res) => {
   try {

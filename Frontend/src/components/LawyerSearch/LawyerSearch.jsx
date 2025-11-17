@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './LawyerSearchStyles.css';
+import "./LawyerSearchStyles.css";
 
 function LawyerSearch({ goBack }) {
   const [formData, setFormData] = useState({
@@ -40,21 +40,17 @@ function LawyerSearch({ goBack }) {
         setResults(data.lawyers);
       } else {
         setResults([]);
-        alert("No lawyers found or filter failed.");
+        alert("No lawyers found.");
       }
     } catch (err) {
-      console.error("Error fetching lawyers:", err);
-      alert("Error searching lawyers. Try again later.");
+      alert("Error fetching lawyers.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleSendRequest = async (lawyer) => {
-    if (!token) {
-      alert("Please login to send a request.");
-      return;
-    }
+    if (!token) return alert("Please login first.");
 
     try {
       const res = await fetch("http://localhost:5000/people/request", {
@@ -63,38 +59,34 @@ function LawyerSearch({ goBack }) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          lawyer_id: lawyer._id,
-        }),
+        body: JSON.stringify({ lawyer_id: lawyer._id }),
       });
 
       const data = await res.json();
+
       if (data.success) {
-        alert(`Request sent successfully to ${lawyer.user_id.name}!`);
+        alert(`Request sent to ${lawyer.user_id?.name}!`);
       } else {
-        alert("Failed to send request: " + data.message);
+        alert(data.message);
       }
     } catch (err) {
-      console.error(err);
-      alert("Error sending request. Try again later.");
+      alert("Error sending request.");
     }
   };
 
   return (
     <div className="lawyer-search-container">
+
       <button className="back-button" onClick={goBack}>
         ← Back
       </button>
 
       <h2 className="search-heading">Find the Lawyer</h2>
-      <p className="search-subtext">
-        Filter lawyers based on specialization, location, or years of experience.
-      </p>
+      <p className="search-subtext">Search using filters below</p>
 
       {/* Search Form */}
       <form onSubmit={handleSearch} className="lawyer-search-form">
 
-        {/* Specialization Dropdown */}
         <select
           name="specialization"
           value={formData.specialization}
@@ -118,21 +110,18 @@ function LawyerSearch({ goBack }) {
         <input
           className="lawyer-search-input"
           name="location"
-          placeholder="Location (e.g., Chennai)"
-          value={formData.location}
+          placeholder="Location"
           onChange={handleChange}
         />
-
         <input
           className="lawyer-search-input"
           name="experience_years"
           type="number"
-          placeholder="Min Experience (years)"
-          value={formData.experience_years}
+          placeholder="Min Experience"
           onChange={handleChange}
         />
 
-        <button className="lawyer-search-button" type="submit" disabled={loading}>
+        <button className="lawyer-search-button" disabled={loading}>
           {loading ? "Searching..." : "Search"}
         </button>
       </form>
@@ -140,16 +129,17 @@ function LawyerSearch({ goBack }) {
       {/* Results */}
       <div className="lawyer-results">
         {results.length === 0 && !loading ? (
-          <p className="no-results">No lawyers found. Try adjusting filters.</p>
+          <p className="no-results">No lawyers found.</p>
         ) : (
-          <div className="lawyer-grid">
-            {results.map((lawyer) => (
-              <div className="lawyer-card" key={lawyer._id}>
-                <h3 className="lawyer-name">{lawyer.user_id?.name || "Unnamed Lawyer"}</h3>
+          results.map((lawyer) => (
+            <div className="lawyer-row-card" key={lawyer._id}>
+
+              {/* LEFT — Lawyer Details */}
+              <div className="lawyer-info">
+                <h3 className="lawyer-name">{lawyer.user_id?.name}</h3>
                 <p><b>Specialization:</b> {lawyer.specialization}</p>
                 <p><b>Location:</b> {lawyer.location}</p>
                 <p><b>Experience:</b> {lawyer.experience_years} years</p>
-                <p><b>Status:</b> {lawyer.approved_status}</p>
 
                 <button
                   className="request-button"
@@ -158,8 +148,27 @@ function LawyerSearch({ goBack }) {
                   Send Request
                 </button>
               </div>
-            ))}
-          </div>
+
+              {/* RIGHT — Case Count in ONE Horizontal Row */}
+              <div className="lawyer-stats-horizontal">
+                <div className="hstat">
+                  <span className="hstat-count ongoing">{lawyer.ongoingCount}</span>
+                  <span className="hstat-label">Ongoing</span>
+                </div>
+
+                <div className="hstat">
+                  <span className="hstat-count completed">{lawyer.completedCount}</span>
+                  <span className="hstat-label">Completed</span>
+                </div>
+
+                <div className="hstat">
+                  <span className="hstat-count closed">{lawyer.closedCount}</span>
+                  <span className="hstat-label">Closed</span>
+                </div>
+              </div>
+
+            </div>
+          ))
         )}
       </div>
     </div>

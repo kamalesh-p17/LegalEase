@@ -13,7 +13,7 @@ const caseSchema = new Schema({
     },
     legal_category: {   
         type: String,
-        enum: ['criminal', 'civil', 'family', 'corporate', 'property', 'labor', 'tax', 'intellectual_property', 'environmental', 'human_rights', 'others'],
+        // enum: ['criminal', 'civil', 'family', 'corporate', 'property', 'labor', 'tax', 'intellectual_property', 'environmental', 'human_rights', 'others'],
         required: true,
     },
 
