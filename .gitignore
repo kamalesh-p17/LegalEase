@@ -3,3 +3,6 @@
 /Backend/.env
 /Frontend/.env
 /Backend/router/test.js
+/Summarization/node_modules
+/Summarization/.env
+.vscode
