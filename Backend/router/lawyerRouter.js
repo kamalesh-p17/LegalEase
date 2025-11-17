@@ -2,6 +2,7 @@ import express from 'express';
 import LawyerProfile from '../module/lawyer.module.js';
 import Case from '../module/case.module.js';
 import verifyToken from '../middleware/authMiddleware.js';
+import CommonUser from '../module/commonUser.module.js';
 
 const router = express.Router();
 
@@ -120,7 +121,6 @@ router.get('/my-cases', verifyToken, async (req, res) => {
       created_at: c.created_at,
       updated_at: c.updated_at
     }));
-    console.log(formattedCases);
     res.status(200).json({ success: true, cases: formattedCases });
 
   } catch (error) {
@@ -207,7 +207,6 @@ router.post("/process_status_update", verifyToken, async (req, res) => {
             });
         }
 
-        // allowed statuses
         const allowed = ["ongoing", "completed", "closed"];
         if (!allowed.includes(new_status)) {
             return res.status(400).json({
@@ -216,7 +215,7 @@ router.post("/process_status_update", verifyToken, async (req, res) => {
             });
         }
 
-        // Fetch the case
+        // FETCH CASE
         const caseObj = await Case.findById(case_id);
         if (!caseObj) {
             return res.status(404).json({
@@ -225,7 +224,7 @@ router.post("/process_status_update", verifyToken, async (req, res) => {
             });
         }
 
-        // Only assigned lawyer can update
+        // AUTH VERIFY
         if (req.user.role !== "lawyer" || req.user.id != caseObj.lawyer_id.toString()) {
             return res.status(403).json({
                 success: false,
@@ -235,12 +234,14 @@ router.post("/process_status_update", verifyToken, async (req, res) => {
 
         const oldStatus = caseObj.status;
 
+        // UPDATE CASE MODEL
         caseObj.status = new_status;
         caseObj.last_updated = new Date();
         await caseObj.save();
 
+        // UPDATE IN COMMON USER
         await CommonUser.updateOne(
-            { "cases.case_id": case_id },
+            { "cases.case_id": caseObj._id },
             {
                 $set: {
                     "cases.$.status": new_status,
@@ -249,21 +250,25 @@ router.post("/process_status_update", verifyToken, async (req, res) => {
             }
         );
 
+        // UPDATE IN LAWYER PROFILE
         await LawyerProfile.updateOne(
-            { "cases.case_id": case_id },
+            { _id: req.user.id, "cases.case_id": caseObj._id },
             {
                 $set: {
                     "cases.$.status": new_status,
-                    "cases.$.last_update": new Date(),
+                    "cases.$.last_updated": new Date(),
                 }
             }
         );
+
+        const updatedCase = await Case.findById(case_id);
 
         return res.status(200).json({
             success: true,
             message: "Case status updated successfully",
             old_status: oldStatus,
             updated_status: new_status,
+            updated_case: updatedCase,
         });
 
     } catch (err) {
@@ -274,5 +279,6 @@ router.post("/process_status_update", verifyToken, async (req, res) => {
         });
     }
 });
+
 
 export default router;

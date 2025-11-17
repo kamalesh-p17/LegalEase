@@ -6,8 +6,8 @@ function LawyerCaseDetails({ caseId, goBack }) {
   const [updateText, setUpdateText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [newStatus, setNewStatus] = useState(""); // ⭐ NEW
-  const [statusLoading, setStatusLoading] = useState(false); // ⭐ NEW
+  const [newStatus, setNewStatus] = useState("");
+  const [statusLoading, setStatusLoading] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -79,7 +79,7 @@ function LawyerCaseDetails({ caseId, goBack }) {
   };
 
   // ======================================================
-  // ⭐ UPDATE CASE STATUS
+  // ⭐ UPDATE CASE STATUS (MATCHES YOUR ROUTER)
   // ======================================================
   const handleStatusUpdate = async () => {
     if (!newStatus) {
@@ -91,14 +91,17 @@ function LawyerCaseDetails({ caseId, goBack }) {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/case/${caseId}/status`,
+        "http://localhost:5000/lawyer/process_status_update",
         {
-          method: "PUT",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ new_status: newStatus }),
+          body: JSON.stringify({
+            case_id: caseId,
+            new_status: newStatus,
+          }),
         }
       );
 
@@ -106,7 +109,11 @@ function LawyerCaseDetails({ caseId, goBack }) {
 
       if (data.success) {
         alert("Case status updated!");
-        setCaseData((prev) => ({ ...prev, status: newStatus }));
+
+        setCaseData((prev) => ({
+          ...prev,
+          status: newStatus,
+        }));
       } else {
         alert(data.message);
       }
@@ -170,23 +177,25 @@ function LawyerCaseDetails({ caseId, goBack }) {
         )}
       </div>
 
-      {/* Add Update */}
-      {caseData.status === "ongoing" && <div className="case-section process-update-section">
-        <h3>Add Process Update</h3>
-        <textarea
-          value={updateText}
-          onChange={(e) => setUpdateText(e.target.value)}
-          placeholder="Enter progress notes or hearing update..."
-          className="update-textarea"
-        />
-        <button
-          className="submit-update-btn"
-          onClick={handleProcessUpdate}
-          disabled={loading}
-        >
-          {loading ? "Submitting..." : "Add Update"}
-        </button>
-      </div>}
+      {/* Add Update only when ongoing */}
+      {caseData.status === "ongoing" && (
+        <div className="case-section process-update-section">
+          <h3>Add Process Update</h3>
+          <textarea
+            value={updateText}
+            onChange={(e) => setUpdateText(e.target.value)}
+            placeholder="Enter progress notes or hearing update..."
+            className="update-textarea"
+          />
+          <button
+            className="submit-update-btn"
+            onClick={handleProcessUpdate}
+            disabled={loading}
+          >
+            {loading ? "Submitting..." : "Add Update"}
+          </button>
+        </div>
+      )}
 
       {/* ⭐ NEW STATUS UPDATE SECTION */}
       {caseData.status === "ongoing" && <div className="case-section status-update-section">
