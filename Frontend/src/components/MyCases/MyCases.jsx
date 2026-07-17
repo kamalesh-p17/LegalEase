@@ -58,7 +58,7 @@ function MyCases({ setSelectedCase }) {
                       : "status-pending"
                   }
                 >
-                  {(c.status === "ongoing") ? "Pending" : c.status.charAt(0).toUpperCase() + c.status.slice(1)}
+                  {(c.status === "ongoing") ? "Under Trail" : (c.status === "completed")? "Concluded" : c.status.charAt(0).toUpperCase() + c.status.slice(1)}
                 </span>
               </p>
               <p><b>Lawyer:</b> {c.lawyer_name || "Not assigned"}</p>

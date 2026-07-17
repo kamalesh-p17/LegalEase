@@ -7,7 +7,6 @@ import verifyToken from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Test route
 router.get('/', (req, res) => {
     res.send('Lawyer Router is working');
 });
@@ -26,9 +25,6 @@ router.post('/filter', async (req, res) => {
         .populate('user_id', 'name email phone')
         .select('specialization experience_years location availability ratings bar_council_id approved_status');
 
-        // ==========================================
-        // Add case counts for each lawyer
-        // ==========================================
         const result = await Promise.all(
             filteredLawyers.map(async (lawyer) => {
                 const lawyerId = lawyer._id;
@@ -57,8 +53,7 @@ router.post('/filter', async (req, res) => {
                 };
             })
         );
-
-        // ==========================================
+        console.log(result);
         res.status(200).json({
             success: true,
             lawyers: result
@@ -74,7 +69,7 @@ router.post('/filter', async (req, res) => {
 });
 
 
-// 2️⃣ Client sends request to lawyer
+// Client sends request to lawyer
 router.post("/request", verifyToken, async (req, res) => {
   try {
     if (req.user.role !== 'common') {
@@ -160,7 +155,7 @@ router.get('/my-cases', verifyToken, async (req, res) => {
 });
 
 
-// 4️⃣ Get case details along with client info
+// Get case details along with client info
 router.get('/:case_id/clients', async (req, res) => {
     try {
         const { case_id } = req.params;

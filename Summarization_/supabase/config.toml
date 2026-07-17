@@ -1,0 +1,7 @@
+project_id = "emauonhaflwlvndionjv"
+
+[functions.search-cases]
+verify_jwt = false
+
+[functions.summarize-case]
+verify_jwt = false

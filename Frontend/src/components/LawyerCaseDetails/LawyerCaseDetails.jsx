@@ -138,8 +138,8 @@ function LawyerCaseDetails({ caseId, goBack }) {
         <p className="case-meta">
           <strong>Status:</strong>{" "}
           {caseData.status === "ongoing"
-            ? "Pending"
-            : caseData.status.charAt(0).toUpperCase() + caseData.status.slice(1)}
+            ? "Under Trail"
+            :(caseData.status === "completed")? "Concluded" : caseData.status.charAt(0).toUpperCase() + caseData.status.slice(1)}
           {" | "}
           <strong>Category:</strong> {caseData.legal_category}
         </p>

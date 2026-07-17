@@ -11,15 +11,13 @@ router.get('/', (req, res) => {
     res.send('Lawyer Router is working');
 });
 
-// 📝 Get all pending client requests for the logged-in lawyer
+// Get all pending client requests for the logged-in lawyer
 router.get("/requests", verifyToken, async (req, res) => {
   try {
-    // Only lawyers can access this
     if (req.user.role !== "lawyer") {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
-    // req.user.id contains the lawyer's _id
     const lawyerId = req.user.id;
 
     const lawyer = await LawyerProfile.findById(lawyerId).select("requests");
@@ -42,7 +40,7 @@ router.get("/requests", verifyToken, async (req, res) => {
     });
   }
 });
-// ➕ Add a process update to a specific case
+// Add a process update to a specific case
 router.post('/:caseId/process_update', verifyToken, async (req, res) => {
   try {
     const { caseId } = req.params;
@@ -57,7 +55,7 @@ router.post('/:caseId/process_update', verifyToken, async (req, res) => {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
-    const lawyer_Id = req.user.id; // ✅ from token
+    const lawyer_Id = req.user.id;
 
     // Find the case belonging to this lawyer
     const caseData = await Case.findOne({ _id: caseId, lawyer_id: lawyer_Id });
@@ -85,14 +83,14 @@ router.post('/:caseId/process_update', verifyToken, async (req, res) => {
   }
 });
 
-// 🧾 Get all cases for the logged-in lawyer
+// Get all cases for the logged-in lawyer
 router.get('/my-cases', verifyToken, async (req, res) => {
   try {
     if (req.user.role !== 'lawyer') {
       return res.status(403).json({ success: false, message: "Access denied" });
     }
 
-    const lawyerId = req.user.id; // ✅ LawyerProfile ID from token
+    const lawyerId = req.user.id;
 
     const cases = await Case.find({ lawyer_id: lawyerId })
       .populate({
@@ -134,7 +132,7 @@ router.get('/my-cases', verifyToken, async (req, res) => {
 });
 
 
-// 🧾 Get a specific case details along with client info
+// Get a specific case details along with client info
 router.get("/:case_id/clients", verifyToken, async (req, res) => {
   try {
     if (req.user.role !== "lawyer") {

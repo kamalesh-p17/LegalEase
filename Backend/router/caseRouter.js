@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
 
 const router = express.Router();
 
-// 2️⃣ Accept a client request and create a case
+// Accept a client request and create a case
 router.post('/requests/:client_id', verifyToken, async (req, res) => {
   try {
     if (req.user.role !== 'lawyer') {

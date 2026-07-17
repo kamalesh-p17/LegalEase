@@ -20,8 +20,8 @@ function CaseDetails({ caseId, goBack }) {
 
   // Helper to format status nicely
   const formatStatus = (status) => {
-    if (status === "ongoing") return "Pending";
-    if (status === "completed") return "Completed";
+    if (status === "ongoing") return "Under Trail";
+    if (status === "completed") return "Concluded";
     if (status === "closed") return "Closed";
     return status.charAt(0).toUpperCase() + status.slice(1);
   };

@@ -40,7 +40,7 @@ function LawyerCases({ setSelectedCase }) {
               onClick={() => setSelectedCase(c._id)}
               className="case-card"
             >
-              <strong>{c.title}</strong> <span className={`status ${c.status}`}>{c.status== "ongoing"? "Pending": c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span>
+              <strong>{c.title}</strong> <span className={`status ${c.status}`}>{c.status== "ongoing"? "Under Trail": (c.status === "completed")? "Concluded" :c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span>
               <p>Client: {c.client_name}</p>
               <p>Location: {c.location}</p>
               <p>Last Updated: {new Date(c.last_updated || c.updated_at).toLocaleString()}</p>

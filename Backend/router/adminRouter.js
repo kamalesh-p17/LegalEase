@@ -31,7 +31,7 @@ router.get("/lawyers_pending", async (req, res) => {
 router.put("/:lawyerId/status", async (req, res) => {
   try {
     const { lawyerId } = req.params;
-    const { status } = req.body; // approved or rejected
+    const { status } = req.body;
 
     if (!["approved", "rejected"].includes(status)) {
       return res.status(400).json({

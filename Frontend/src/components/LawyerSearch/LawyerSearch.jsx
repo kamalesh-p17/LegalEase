@@ -103,7 +103,7 @@ function LawyerSearch({ goBack }) {
           <option value="tax">Tax</option>
           <option value="intellectual_property">Intellectual Property</option>
           <option value="environmental">Environmental</option>
-          <option value="human_rights">Human Rights</option>
+          <option value="human rights">Human Rights</option>
           <option value="others">Others</option>
         </select>
 
@@ -153,12 +153,12 @@ function LawyerSearch({ goBack }) {
               <div className="lawyer-stats-horizontal">
                 <div className="hstat">
                   <span className="hstat-count ongoing">{lawyer.ongoingCount}</span>
-                  <span className="hstat-label">Ongoing</span>
+                  <span className="hstat-label">Under Trail</span>
                 </div>
 
                 <div className="hstat">
                   <span className="hstat-count completed">{lawyer.completedCount}</span>
-                  <span className="hstat-label">Completed</span>
+                  <span className="hstat-label">Concluded</span>
                 </div>
 
                 <div className="hstat">
